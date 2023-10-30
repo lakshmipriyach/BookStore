@@ -114,7 +114,7 @@ public class BookStoreController {
 		if (result.getMessage().equals("Book Deleted successfully")) {
 	        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(result);
 	    } else {
-	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
 	    }
 	}
 	
@@ -125,7 +125,7 @@ public class BookStoreController {
 		DeleteUsersBooks result = bookStoreService.deleteUsersBooks(userId);
 
 		if (result.getMessage().equals("No books found")) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
 	    } else {
 	        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(result);
 	    }
