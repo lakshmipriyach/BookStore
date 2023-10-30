@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -56,9 +55,9 @@ public class AccountController {
 	// Delete User Details
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')") // Users with 'USER' or 'ADMIN' roles can access this method
 	@DeleteMapping("/User/{userId}")
-	public ResponseEntity<String> deleteUser(@PathVariable String userId) {
+	public ResponseEntity<String> deleteUser(@PathVariable String userId){
 		String result = accountService.deleteUser(userId);
-		return new ResponseEntity<String>(result, HttpStatus.OK);
+		return new ResponseEntity<String>(result,HttpStatus.OK);
 	}
 
 	// Get User details

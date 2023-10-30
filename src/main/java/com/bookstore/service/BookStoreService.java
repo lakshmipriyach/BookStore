@@ -8,6 +8,7 @@ import com.bookstore.payload.BooksResult;
 import com.bookstore.payload.DeleteBook;
 import com.bookstore.payload.DeleteBookResponse;
 import com.bookstore.payload.DeleteBookResult;
+import com.bookstore.payload.DeleteUsersBooks;
 import com.bookstore.payload.Message;
 import com.bookstore.payload.ReplaceIsbn;
 
@@ -30,9 +31,14 @@ public interface BookStoreService {
 
 	// delete book to user
 	DeleteBookResult deleteBookFromUser(DeleteBook deleteBook);
+	
+	// delete all books to user
+	DeleteUsersBooks deleteUsersBooks(String userId);
 
 	// update book to user
 	Message updateBookToUser(ReplaceIsbn replaceIsbn);
+
+	
 
 
 }

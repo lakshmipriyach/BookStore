@@ -17,6 +17,7 @@ import com.bookstore.payload.CollectionOfIsbn;
 import com.bookstore.payload.DeleteBook;
 import com.bookstore.payload.DeleteBookResponse;
 import com.bookstore.payload.DeleteBookResult;
+import com.bookstore.payload.DeleteUsersBooks;
 import com.bookstore.payload.Message;
 import com.bookstore.payload.ReplaceIsbn;
 import com.bookstore.repository.BookRepository;
@@ -155,33 +156,6 @@ public class BookStoreServiceImpl implements BookStoreService {
 
 	}
 
-	// delete book to user
-
-	@Override
-	public DeleteBookResult deleteBookFromUser(DeleteBook deleteBook) {
-
-		DeleteBookResult result = new DeleteBookResult();
-
-		String userId = deleteBook.getUserId();
-		String isbn = deleteBook.getIsbn();
-
-		Book deleteUserBook = bookRepository.findByUserIdAndIsbn(userId, isbn);
-
-		if (deleteUserBook != null) {
-			// If the book exists, delete it
-			bookRepository.delete(deleteUserBook);
-
-			result.setUserId(userId);
-			result.setIsbn(isbn);
-			result.setMessage("Book Deleted successfully");
-		} else {
-			// Handle the case when the book is not found
-			result.setMessage("Book not found for userId: " + userId + " and isbn: " + isbn);
-		}
-
-		return result;
-	}
-
 	// update book to user
 
 	@Override
@@ -203,10 +177,59 @@ public class BookStoreServiceImpl implements BookStoreService {
 			result.setCode(200);
 			result.setMessage("Book Updated Successfully");
 		} else {
+
 			result.setMessage("Book not found for userId: " + userId + " and ISBN: " + newIsbn);
 		}
 
 		return result;
+	}
+
+	// delete book to user
+
+	@Override
+	public DeleteBookResult deleteBookFromUser(DeleteBook deleteBook) {
+
+		DeleteBookResult result = new DeleteBookResult();
+
+		String userId = deleteBook.getUserId();
+		String isbn = deleteBook.getIsbn();
+
+		Book deleteUserBook = bookRepository.findByUserIdAndIsbn(userId, isbn);
+
+		if (deleteUserBook != null) {
+			// If the book exists, delete it
+			bookRepository.delete(deleteUserBook);
+
+			result.setUserId(userId);
+			result.setIsbn(isbn);
+			result.setMessage("Book Deleted successfully");
+		} else {
+			// Handle the case when the book is not found
+			result.setUserId(userId);
+			result.setIsbn(isbn);
+			result.setMessage("Book not found for userId ");
+		}
+
+		return result;
+	}
+
+	// delete all the books to user
+
+	@Override
+	public DeleteUsersBooks deleteUsersBooks(String userId) {
+		List<Book> userBooksToDelete = bookRepository.findByUserId(userId);
+		DeleteUsersBooks response = new DeleteUsersBooks();
+
+		if (!userBooksToDelete.isEmpty()) {
+			bookRepository.deleteAll(userBooksToDelete);
+			response.setUserId(userId);
+			response.setMessage("Books deleted successfully");
+		} else {
+			response.setUserId(userId);
+			response.setMessage("No books found");
+		}
+
+		return response;
 	}
 
 }

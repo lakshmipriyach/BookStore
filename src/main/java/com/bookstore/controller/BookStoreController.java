@@ -23,6 +23,7 @@ import com.bookstore.payload.BooksResult;
 import com.bookstore.payload.DeleteBook;
 import com.bookstore.payload.DeleteBookResponse;
 import com.bookstore.payload.DeleteBookResult;
+import com.bookstore.payload.DeleteUsersBooks;
 import com.bookstore.payload.Message;
 import com.bookstore.payload.ReplaceIsbn;
 import com.bookstore.service.BookStoreService;
@@ -110,10 +111,23 @@ public class BookStoreController {
 	public ResponseEntity<DeleteBookResult> deleteBookFromUser(@RequestBody DeleteBook deleteBook) {
 		DeleteBookResult result = bookStoreService.deleteBookFromUser(deleteBook);
 
-		if (result.getMessage().equals("Book not found")) {
+		if (result.getMessage().equals("Book Deleted successfully")) {
+	        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(result);
+	    } else {
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
+	    }
+	}
+	
+	// Delete all books to user
+	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+	@DeleteMapping("/Book/{userId}")
+	public ResponseEntity<DeleteUsersBooks> deleteUsersBooks(@PathVariable String userId) {
+		DeleteUsersBooks result = bookStoreService.deleteUsersBooks(userId);
+
+		if (result.getMessage().equals("No books found")) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
-		} else {
-			return ResponseEntity.ok(result);
-		}
+	    } else {
+	        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(result);
+	    }
 	}
 }

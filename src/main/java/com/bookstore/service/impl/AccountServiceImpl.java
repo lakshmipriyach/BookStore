@@ -188,14 +188,18 @@ public class AccountServiceImpl implements AccountService {
 		Register userRegistration = registerRepository.findByUserId(userId);
 
 		if (user != null) {
-			// If the user exists, delete them
+			// If the user exists, remove their roles, then delete them
+			userLogin.getRoles().clear(); // Remove roles from the user
+			loginRepository.save(userLogin); // Save the user without roles
+
+			// Delete the user, login, and registration
 			userRepository.delete(user);
 			loginRepository.delete(userLogin);
 			registerRepository.delete(userRegistration);
 
 			return "User Deleted Successfully";
 		} else {
-			throw new BookStoreAPIException(HttpStatus.BAD_REQUEST, "User does not exist!");
+			throw new BookStoreAPIException(HttpStatus.NOT_FOUND, "User not found");
 		}
 	}
 
