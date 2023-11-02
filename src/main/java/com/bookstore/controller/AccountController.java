@@ -37,18 +37,20 @@ public class AccountController {
 
 	}
 
-	// Token generation
-	@PostMapping("/GenerateToken")
-	public ResponseEntity<Token> generateToken(@RequestBody Login login) {
-		Token result = accountService.generateToken(login);
-		return new ResponseEntity<>(result, HttpStatus.OK);
-	}
+	/*
+	 * // Token generation
+	 * 
+	 * @PostMapping("/GenerateToken") public ResponseEntity<Token>
+	 * generateToken(@RequestBody Login login) { Token result =
+	 * accountService.generateToken(login); return new ResponseEntity<>(result,
+	 * HttpStatus.OK); }
+	 */
 
 	// Authorized or not
 	@PostMapping("/Authorized")
-	public ResponseEntity<String> authorizedUser(@RequestBody Login login) {
-		String result = accountService.authorizedUser(login);
-		return new ResponseEntity<String>(result, HttpStatus.OK);
+	public ResponseEntity<Token> authorizedUser(@RequestBody Login login) {
+		Token result = accountService.authorizedUser(login);
+		return new ResponseEntity<>(result, HttpStatus.OK);
 
 	}
 

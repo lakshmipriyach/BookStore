@@ -9,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,8 +36,17 @@ public class Token {
 	@JsonIgnore
 	private String userName;
 
+	@Transient 
+	private String userId;
+	
 	private String token;
 	private String expires;
 	private String status;
 	private String result;
+	
+	public void setUserIdFromLogin() {
+		if (login != null) {
+			this.userId = login.getUserId();
+		}
+}
 }

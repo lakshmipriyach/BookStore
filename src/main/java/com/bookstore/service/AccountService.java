@@ -10,11 +10,12 @@ public interface AccountService {
 	// For User Registration
 	User register(Register register);
 
-	// To generate token for the user
-	Token generateToken(Login login);
+	/*
+	 * // To generate token for the user Token generateToken(Login login);
+	 */
 
 	// Is User authorized or not
-	String authorizedUser(Login login);
+	Token authorizedUser(Login login);
 
 	// Delete the User details
 	String deleteUser(String userId);

@@ -125,18 +125,54 @@ public class AccountServiceImpl implements AccountService {
 			int randomIndex = random.nextInt(characters.length());
 			char randomChar = characters.charAt(randomIndex);
 			userIdBuilder.append(randomChar);
-		}
-
+		
+		
+	}
 		return userIdBuilder.toString();
 	}
 
 	// To generate token for the user
 
-	public Token generateToken(Login login) {
-		// Check if a user with the same username exists
+	/*
+	 * public Token generateToken(Login login) { // Check if a user with the same
+	 * username exists Login user =
+	 * loginRepository.findByUserName(login.getUserName()); if (user == null) {
+	 * throw new BookStoreAPIException(HttpStatus.BAD_REQUEST,
+	 * "User does not exist!"); }
+	 * 
+	 * Authentication authentication = authenticationManager .authenticate(new
+	 * UsernamePasswordAuthenticationToken(login.getUserName(),
+	 * login.getPassword()));
+	 * 
+	 * SecurityContextHolder.getContext().setAuthentication(authentication);
+	 * 
+	 * String token = jwtTokenProvider.generateToken(authentication);
+	 * 
+	 * // Create a Token object with the token, expiration, status, and result Token
+	 * tokenResponse = new Token(); tokenResponse.setToken(token);
+	 * 
+	 * // Set the expiration time in the desired format long expirationTimeMillis =
+	 * System.currentTimeMillis() + jwtExpirationDate; SimpleDateFormat dateFormat =
+	 * new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+	 * dateFormat.setTimeZone(TimeZone.getTimeZone("UTC")); String expirationTime =
+	 * dateFormat.format(new Date(expirationTimeMillis));
+	 * tokenResponse.setExpires(expirationTime);
+	 * 
+	 * tokenResponse.setStatus("Success");
+	 * tokenResponse.setResult("User authorized successfully");
+	 * 
+	 * return tokenResponse; }
+	 */
+
+	// Is User authorized or not
+
+	@Override
+	public Token authorizedUser(Login login) {
+
 		Login user = loginRepository.findByUserName(login.getUserName());
 		if (user == null) {
 			throw new BookStoreAPIException(HttpStatus.BAD_REQUEST, "User does not exist!");
+
 		}
 
 		Authentication authentication = authenticationManager
@@ -157,25 +193,11 @@ public class AccountServiceImpl implements AccountService {
 		String expirationTime = dateFormat.format(new Date(expirationTimeMillis));
 		tokenResponse.setExpires(expirationTime);
 
+		tokenResponse.setUserId(user.getUserId());
 		tokenResponse.setStatus("Success");
 		tokenResponse.setResult("User authorized successfully");
 
 		return tokenResponse;
-	}
-
-	// Is User authorized or not
-
-	@Override
-	public String authorizedUser(Login login) {
-
-		Login user = loginRepository.findByUserName(login.getUserName());
-		if (user == null) {
-			throw new BookStoreAPIException(HttpStatus.BAD_REQUEST, "User does not exist!");
-
-		}
-
-		// If the user exists, return a success message
-		return "User Authorized Successfully!";
 	}
 
 	// Delete the User details
