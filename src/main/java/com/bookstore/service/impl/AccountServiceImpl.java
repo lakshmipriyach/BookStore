@@ -69,51 +69,57 @@ public class AccountServiceImpl implements AccountService {
 
 	@Override
 	public User register(Register register) {
-		// Check if a user with the same username already exists
-		if (registerRepository.existsByUserName(register.getUserName())) {
-			throw new BookStoreAPIException(HttpStatus.BAD_REQUEST, "User exists!");
-		}
+	    // Check if a user with the same username already exists
+	    if (registerRepository.existsByUserName(register.getUserName())) {
+	        throw new BookStoreAPIException(HttpStatus.BAD_REQUEST, "User exists!");
+	    }
 
-		// Generate a random 5-digit alphanumeric userId
-		String randomUserId = generateRandomUserId();
+	    // Validate if passwords match
+	    if (!register.isPasswordConfirmed()) {
+	        throw new BookStoreAPIException(HttpStatus.BAD_REQUEST, "Password and Confirm Password do not match");
+	    }
 
-		// Create a new Login entity and associate it with the Register entity
-		Login login = new Login();
-		login.setUserName(register.getUserName());
-		login.setPassword(passwordEncoder.encode(register.getPassword()));
+	    // Generate a random 5-digit alphanumeric userId
+	    String randomUserId = generateRandomUserId();
 
-		// Set the userId in the Login entity
-		login.setUserId(randomUserId);
+	    // Create a new CreateUserResult entity and set the generated userId
+	    User user = new User();
+	    user.setUserId(randomUserId);
+	    user.setUserName(register.getUserName());
 
-		// Set the user's role (e.g., "ROLE_USER")
-		Set<Role> roles = new HashSet<>();
-		Role userRole = roleRepository.findByName("ROLE_USER").orElseThrow(
-				() -> new BookStoreAPIException(HttpStatus.INTERNAL_SERVER_ERROR, "ROLE_USER role not found."));
-		roles.add(userRole);
-		login.setRoles(roles);
+	    // Set the userId in the Register entity
+	    register.setUserId(randomUserId);
 
-		// Save the new Login entity
-		login = loginRepository.save(login);
+	    if (register.isPasswordConfirmed()) {
+	        // Create a new Login entity only if passwords match
+	        Login login = new Login();
+	        login.setUserName(register.getUserName());
+	        login.setPassword(passwordEncoder.encode(register.getPassword()));
+	        login.setUserId(randomUserId);
 
-		// Create a new CreateUserResult entity and set the generated userId
-		User user = new User();
-		user.setUserId(randomUserId);
-		user.setUserName(register.getUserName());
+	        // Set the user's role (e.g., "ROLE_USER")
+	        Set<Role> roles = new HashSet<>();
+	        Role userRole = roleRepository.findByName("ROLE_USER").orElseThrow(
+	                () -> new BookStoreAPIException(HttpStatus.INTERNAL_SERVER_ERROR, "ROLE_USER role not found."));
+	        roles.add(userRole);
+	        login.setRoles(roles);
 
-		// Set the Login entity in the Register entity
-		register.setLogin(login);
+	        // Save the new Login entity only if passwords match
+	        login = loginRepository.save(login);
 
-		// Set the userId in the Register entity
-		register.setUserId(randomUserId);
+	        // Set the Login entity in the Register entity
+	        register.setLogin(login);
+	    }
 
-		// Save the new user registration data in user_registration table
-		register = registerRepository.save(register);
+	    // Save the new user registration data in user_registration table
+	    register = registerRepository.save(register);
 
-		// Save the CreateUserResult entity in create_user_result table
-		user = userRepository.save(user);
+	    // Save the CreateUserResult entity in create_user_result table
+	    user = userRepository.save(user);
 
-		return user;
+	    return user;
 	}
+
 
 	// Custom method to generate a random 5-digit alphanumeric userId
 	private String generateRandomUserId() {

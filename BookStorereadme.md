@@ -18,24 +18,9 @@ output --   {
               "books": []
 	    }       
          
-
-2) Generate Token
-   http://localhost:8080/Account/GenerateToken
+  
    
- input --  {
-            "userName": "lakshmipriya",
-            "password": "Priya1234"
-           }
-   
- output --   {
-   	 	"token": "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJsYWtzaG1pcHJpeWEiLCJpYXQiOjE2OTc3MDA2NDgsImV4cCI6MTY5ODMwNTQ0OH0.vQUZvqvVri31Txp4A_XgLAy-MPeqUDSizX1t0c2LZr7qWw5pU33cXIfVSCysGggO",
-    		"expires": "2023-10-26T07:30:48.556Z",
-   	 	"status": "Success",
-    		"result": "User authorized successfully"
-   	     }
-   
-   
-3) Check User Authorization
+2) Check User Authorization
    http://localhost:8080/Account/Authorized
    
  input --  {
@@ -43,10 +28,17 @@ output --   {
              "password": "Priya1234"
            }
 
- output --  User Authorized Successfully!
+ output --  {
+                "userId": "T1FW7",
+   	 	"token": "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJsYWtzaG1pcHJpeWEiLCJpYXQiOjE2OTc3MDA2NDgsImV4cCI6MTY5ODMwNTQ0OH0.vQUZvqvVri31Txp4A_XgLAy-MPeqUDSizX1t0c2LZr7qWw5pU33cXIfVSCysGggO",
+    		"expires": "2023-10-26T07:30:48.556Z",
+   	 	"status": "Success",
+    		"result": "User authorized successfully"
+   	     }
+   
 
 
-4) Delete User Account    (Authenticated -- can access by Admin and User)
+3) Delete User Account    (Authenticated -- can access by Admin and User)
    http://localhost:8080/Account/User/{userId}
 
  input --  http://localhost:8080/Account/User/T1FW7
@@ -54,7 +46,7 @@ output --   {
    User Deleted Successfully
 
 
-5) Get User Details     (Authenticated -- can access by Admin and User)
+4) Get User Details     (Authenticated -- can access by Admin and User)
    http://localhost:8080/Account/User/{userId}
    
  input --  http://localhost:8080/Account/User/T1FW7 
