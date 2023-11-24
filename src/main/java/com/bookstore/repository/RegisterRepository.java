@@ -10,4 +10,6 @@ public interface RegisterRepository extends JpaRepository<Register, Long> {
 
 	Register findByUserId(String userId);
 
+	Register findByUserName(String username);
+
 }

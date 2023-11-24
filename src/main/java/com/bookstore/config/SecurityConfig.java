@@ -51,7 +51,7 @@ public class SecurityConfig {
 				.authorizeHttpRequests((authorize) -> 
 				authorize
 				.requestMatchers("/Account/User").permitAll()
-						.requestMatchers("/Account/GenerateToken").permitAll()
+						//.requestMatchers("/Account/GenerateToken").permitAll()
 						.requestMatchers("/Account/Authorized").permitAll()
 						.requestMatchers("/Account/User/{userId}").authenticated()
 						.requestMatchers("/Account/DeleteUser/{userId}").authenticated()

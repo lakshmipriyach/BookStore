@@ -22,5 +22,6 @@ public interface AccountService {
 
 	// Get the User Details
 	User getUserDetails(String userId);
+	
 
 }
