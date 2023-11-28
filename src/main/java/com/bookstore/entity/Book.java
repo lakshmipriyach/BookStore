@@ -1,7 +1,8 @@
 package com.bookstore.entity;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
@@ -12,8 +13,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -46,8 +45,8 @@ public class Book {
 	@Column(nullable = false)
 	private String author;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	private LocalDateTime publishDate;
+	@JsonFormat(pattern = "dd-MM-yyyy")
+	private LocalDate publishDate;
 
 	private String publisher;
 	private int pages;

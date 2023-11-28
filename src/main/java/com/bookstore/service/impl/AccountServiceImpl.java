@@ -25,6 +25,7 @@ import com.bookstore.entity.Role;
 import com.bookstore.entity.Token;
 import com.bookstore.entity.User;
 import com.bookstore.exception.BookStoreAPIException;
+import com.bookstore.payload.ForgotPassword;
 import com.bookstore.repository.BookRepository;
 import com.bookstore.repository.LoginRepository;
 import com.bookstore.repository.RegisterRepository;
@@ -205,6 +206,7 @@ public class AccountServiceImpl implements AccountService {
 		tokenResponse.setExpires(expirationTime);
 
 		tokenResponse.setUserId(user.getUserId());
+		tokenResponse.setUserName(user.getUserName());
 		tokenResponse.setStatus("Success");
 		tokenResponse.setResult("User authorized successfully");
 
@@ -277,5 +279,34 @@ public class AccountServiceImpl implements AccountService {
 
 		return user;
 	}
+	
+	//Logout
+
+	@Override
+	public String logout(String userId) {
+	    User user = userRepository.findByUserId(userId);
+
+	    if (user == null) {
+	        throw new BookStoreAPIException(HttpStatus.NOT_FOUND, "User not found");
+	    }
+
+	    // Clear the security context
+	    SecurityContextHolder.clearContext();
+
+	    return "Logout Successful";
+	}
+
+//	@Override
+//	public ForgotPassword forgotPassword(String userId) {
+//		
+//		
+//		
+//		return "Password Updated Sucessfully";
+//	}
 
 }
+
+
+
+
+
