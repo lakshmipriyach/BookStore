@@ -5,7 +5,8 @@ import com.bookstore.entity.Register;
 import com.bookstore.entity.Token;
 import com.bookstore.entity.User;
 import com.bookstore.payload.ForgotPassword;
-import com.bookstore.payload.ForgotPasswordRequest;
+import com.bookstore.payload.ForgotpasswordRequest;
+
 
 public interface AccountService {
 
@@ -29,6 +30,6 @@ public interface AccountService {
 	String logout(String userId);
 	
 	// Forgot password
-	ForgotPasswordRequest forgotPassword(ForgotPassword forgotPassword);
+	ForgotpasswordRequest forgotPassword(ForgotPassword forgotPassword);
 
 }

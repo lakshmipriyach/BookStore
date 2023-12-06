@@ -56,5 +56,3 @@ public class Register {
 	@OneToOne(mappedBy = "register", cascade = CascadeType.DETACH)
 	private Login login;
 }
-
-

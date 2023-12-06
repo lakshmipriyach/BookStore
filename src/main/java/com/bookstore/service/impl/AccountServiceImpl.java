@@ -26,7 +26,7 @@ import com.bookstore.entity.Token;
 import com.bookstore.entity.User;
 import com.bookstore.exception.BookStoreAPIException;
 import com.bookstore.payload.ForgotPassword;
-import com.bookstore.payload.ForgotPasswordRequest;
+import com.bookstore.payload.ForgotpasswordRequest;
 import com.bookstore.repository.BookRepository;
 import com.bookstore.repository.LoginRepository;
 import com.bookstore.repository.RegisterRepository;
@@ -301,48 +301,43 @@ public class AccountServiceImpl implements AccountService {
 	// Forgot Password
 
 	@Override
-	public ForgotPasswordRequest forgotPassword(ForgotPassword forgotPassword) {
-
-	    String userName = forgotPassword.getUserName();
+	public ForgotpasswordRequest forgotPassword(ForgotPassword forgotPassword) {
+		
+		String userName = forgotPassword.getUserName();
 	    String newPassword = forgotPassword.getNewPassword();
 	    String confirmPassword = forgotPassword.getConfirmPassword();
-
+	    
+	    // Find the user by username
+	    Login login = loginRepository.findByUserName(userName);
+	    
+	    if (login == null) {
+	        throw new BookStoreAPIException(HttpStatus.NOT_FOUND, "User not found");
+	    }
+	    
 	    if (!newPassword.equals(confirmPassword)) {
 	        throw new BookStoreAPIException(HttpStatus.BAD_REQUEST, "Password and Confirm Password do not match");
 	    }
-
+ 
 	    User user = userRepository.findByUserName(userName);
-
+ 
 	    if (user == null) {
 	        throw new BookStoreAPIException(HttpStatus.NOT_FOUND, "User not found");
 	    }
-
+ 
 	    if (newPassword.length() < 8) {
 	        throw new BookStoreAPIException(HttpStatus.BAD_REQUEST, "Password must be at least 8 characters long");
 	    }
 
-	    // Update the password in the Register table
-	    Register register = registerRepository.findByUserName(userName);
-	    if (register != null) {
-	        // Encode the new password before saving
-	        register.setPassword(newPassword);
-	        registerRepository.save(register);
-	    }
-
-	    // Update the password in the Login table
-	    Login login = loginRepository.findByUserName(userName);
-	    if (login != null) {
-	        // Encode the new password before saving
-	        login.setPassword(passwordEncoder.encode(newPassword));
-	        loginRepository.save(login);
-	    }
-
-	    ForgotPasswordRequest forgotPasswordRequest = new ForgotPasswordRequest();
-	    forgotPasswordRequest.setUserId(user.getUserId());
+	    // Update the user's password
+	    login.setPassword(passwordEncoder.encode(newPassword));  
+	    // Save the updated user entity
+	    loginRepository.save(login);
+	    
+	    ForgotpasswordRequest forgotPasswordRequest = new ForgotpasswordRequest();
+	    forgotPasswordRequest.setUserId(login.getUserId());
 	    forgotPasswordRequest.setMessage("Password reset successful");
-
+ 
 	    return forgotPasswordRequest;
 	}
-
 
 }
