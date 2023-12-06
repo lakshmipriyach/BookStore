@@ -17,11 +17,14 @@ import com.bookstore.entity.Login;
 import com.bookstore.entity.Register;
 import com.bookstore.entity.Token;
 import com.bookstore.entity.User;
+import com.bookstore.exception.BookStoreAPIException;
+import com.bookstore.payload.ForgotPassword;
+import com.bookstore.payload.ForgotPasswordRequest;
 import com.bookstore.service.AccountService;
 
 @RestController
 @RequestMapping("/Account")
-@CrossOrigin(origins = "http://localhost:5173/")
+@CrossOrigin(origins = "http://localhost:5173/",allowCredentials = "true")
 public class AccountController {
 
 	@Autowired
@@ -80,5 +83,22 @@ public class AccountController {
 		
 	}
 	
+	// Forgot Password
+	
+	@PostMapping("/forgot-password")
+    public ResponseEntity<ForgotPasswordRequest> forgotPassword(@RequestBody ForgotPassword forgotPassword) {
+        try {
+            ForgotPasswordRequest result = accountService.forgotPassword(forgotPassword);
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (BookStoreAPIException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+	}
 
 }
+
+
+
+
+
+

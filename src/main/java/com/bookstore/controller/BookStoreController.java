@@ -31,7 +31,7 @@ import com.bookstore.service.BookStoreService;
 
 @RestController
 @RequestMapping("/BookStore")
-@CrossOrigin(origins = "http://localhost:5173/")
+@CrossOrigin(origins = "http://localhost:5173/",allowCredentials = "true")
 public class BookStoreController {
 
 	@Autowired

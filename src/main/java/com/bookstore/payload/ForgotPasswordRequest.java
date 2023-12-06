@@ -9,10 +9,9 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ForgotPassword {
+public class ForgotPasswordRequest {
 
-	private String userName;
-	private String newPassword;
-	private String confirmPassword;
+	private String userId;
+	private String message;
 
 }

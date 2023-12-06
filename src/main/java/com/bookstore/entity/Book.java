@@ -2,6 +2,8 @@ package com.bookstore.entity;
 
 import java.time.LocalDate;
 
+import org.hibernate.validator.constraints.URL;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -13,6 +15,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,23 +39,36 @@ public class Book {
 	@Column(name = "user_id") // This links to the user ID
 	private String userId;
 
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
+    @Pattern(regexp = "\\d{12}", message = "ISBN should be a 12-digit number")
 	private String isbn;
 
-	@Column(nullable = false)
+	@Column(nullable = false,unique = true)
 	private String title;
 
+	@Column(nullable = false)
 	private String subTitle;
 
 	@Column(nullable = false)
 	private String author;
 
+	@Column(nullable = false)
 	@JsonFormat(pattern = "dd-MM-yyyy")
-	private LocalDate publishDate;
+    private LocalDate publishDate;
 
+	@Column(nullable = false)
 	private String publisher;
-	private int pages;
+	
+	@Column(nullable = false)
+	@NotNull(message = "Pages cannot be blank")
+	@Min(value = 1, message = "Pages should be greater than 0")
+	private Integer pages;
+	
+	@Column(nullable = false)
 	private String description;
+	
+	@Column(nullable = false)
+	@URL
 	private String website;
 
 	@ManyToOne

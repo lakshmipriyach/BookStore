@@ -26,6 +26,7 @@ import com.bookstore.entity.Token;
 import com.bookstore.entity.User;
 import com.bookstore.exception.BookStoreAPIException;
 import com.bookstore.payload.ForgotPassword;
+import com.bookstore.payload.ForgotPasswordRequest;
 import com.bookstore.repository.BookRepository;
 import com.bookstore.repository.LoginRepository;
 import com.bookstore.repository.RegisterRepository;
@@ -34,6 +35,7 @@ import com.bookstore.repository.TokenRepository;
 import com.bookstore.repository.UserRepository;
 import com.bookstore.security.JwtTokenProvider;
 import com.bookstore.service.AccountService;
+
 
 @Service
 public class AccountServiceImpl implements AccountService {
@@ -206,7 +208,7 @@ public class AccountServiceImpl implements AccountService {
 		tokenResponse.setExpires(expirationTime);
 
 		tokenResponse.setUserId(user.getUserId());
-		tokenResponse.setUserName(user.getUserName());
+		tokenResponse.setUserName(user.getUserName()); // this is not coming in output
 		tokenResponse.setStatus("Success");
 		tokenResponse.setResult("User authorized successfully");
 
@@ -279,34 +281,68 @@ public class AccountServiceImpl implements AccountService {
 
 		return user;
 	}
-	
-	//Logout
+
+	// Logout
 
 	@Override
 	public String logout(String userId) {
-	    User user = userRepository.findByUserId(userId);
+		User user = userRepository.findByUserId(userId);
+
+		if (user == null) {
+			throw new BookStoreAPIException(HttpStatus.NOT_FOUND, "User not found");
+		}
+
+		// Clear the security context
+		SecurityContextHolder.clearContext();
+
+		return "Logout Successful";
+	}
+
+	// Forgot Password
+
+	@Override
+	public ForgotPasswordRequest forgotPassword(ForgotPassword forgotPassword) {
+
+	    String userName = forgotPassword.getUserName();
+	    String newPassword = forgotPassword.getNewPassword();
+	    String confirmPassword = forgotPassword.getConfirmPassword();
+
+	    if (!newPassword.equals(confirmPassword)) {
+	        throw new BookStoreAPIException(HttpStatus.BAD_REQUEST, "Password and Confirm Password do not match");
+	    }
+
+	    User user = userRepository.findByUserName(userName);
 
 	    if (user == null) {
 	        throw new BookStoreAPIException(HttpStatus.NOT_FOUND, "User not found");
 	    }
 
-	    // Clear the security context
-	    SecurityContextHolder.clearContext();
+	    if (newPassword.length() < 8) {
+	        throw new BookStoreAPIException(HttpStatus.BAD_REQUEST, "Password must be at least 8 characters long");
+	    }
 
-	    return "Logout Successful";
+	    // Update the password in the Register table
+	    Register register = registerRepository.findByUserName(userName);
+	    if (register != null) {
+	        // Encode the new password before saving
+	        register.setPassword(newPassword);
+	        registerRepository.save(register);
+	    }
+
+	    // Update the password in the Login table
+	    Login login = loginRepository.findByUserName(userName);
+	    if (login != null) {
+	        // Encode the new password before saving
+	        login.setPassword(passwordEncoder.encode(newPassword));
+	        loginRepository.save(login);
+	    }
+
+	    ForgotPasswordRequest forgotPasswordRequest = new ForgotPasswordRequest();
+	    forgotPasswordRequest.setUserId(user.getUserId());
+	    forgotPasswordRequest.setMessage("Password reset successful");
+
+	    return forgotPasswordRequest;
 	}
 
-//	@Override
-//	public ForgotPassword forgotPassword(String userId) {
-//		
-//		
-//		
-//		return "Password Updated Sucessfully";
-//	}
 
 }
-
-
-
-
-

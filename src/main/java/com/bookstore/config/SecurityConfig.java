@@ -56,6 +56,7 @@ public class SecurityConfig {
 						.requestMatchers("/Account/User/{userId}").authenticated()
 						.requestMatchers("/Account/DeleteUser/{userId}").authenticated()
 						.requestMatchers("/Account/logout/{userId}").authenticated()
+						.requestMatchers("/Account/forgot-password").permitAll()
 						.requestMatchers(HttpMethod.POST, "/BookStore/Books").authenticated()
 						.requestMatchers(HttpMethod.GET, "/BookStore/Books").permitAll()
 						.requestMatchers(HttpMethod.DELETE,"/BookStore/Books/{isbn}").authenticated()
