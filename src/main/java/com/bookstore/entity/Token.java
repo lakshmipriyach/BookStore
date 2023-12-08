@@ -1,5 +1,7 @@
 package com.bookstore.entity;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
@@ -36,17 +38,21 @@ public class Token {
 	@JsonIgnore
 	private String userName;
 
-	@Transient 
+	@Transient
 	private String userId;
-	
+
+	private String roleName;
+	private Long roleId;
+
 	private String token;
 	private String expires;
 	private String status;
 	private String result;
-	
+
 	public void setUserIdFromLogin() {
 		if (login != null) {
 			this.userId = login.getUserId();
 		}
-}
+
+	}
 }

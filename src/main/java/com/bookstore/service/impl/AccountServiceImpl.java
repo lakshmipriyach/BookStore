@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TimeZone;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -211,7 +212,15 @@ public class AccountServiceImpl implements AccountService {
 		tokenResponse.setUserName(user.getUserName()); // this is not coming in output
 		tokenResponse.setStatus("Success");
 		tokenResponse.setResult("User authorized successfully");
-
+		
+		// Fetch user roles and set them in the response
+		Set<Role> roles = user.getRoles();
+		if (roles != null && !roles.isEmpty()) {
+		    Role firstRole = roles.iterator().next(); // Assuming you want the first role if there are multiple
+		    tokenResponse.setRoleName(firstRole.getName());
+		    tokenResponse.setRoleId(firstRole.getId());
+		}
+		
 		return tokenResponse;
 	}
 
