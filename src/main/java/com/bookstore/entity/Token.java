@@ -35,11 +35,10 @@ public class Token {
 	@JsonIgnore
 	private Login login; // Reference to the Login entity
 
-	@JsonIgnore
-	private String userName;
-
 	@Transient
 	private String userId;
+	
+	private String userName;
 
 	private String roleName;
 	private Long roleId;

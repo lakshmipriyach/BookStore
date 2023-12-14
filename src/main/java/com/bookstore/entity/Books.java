@@ -34,19 +34,24 @@ public class Books {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@NotNull(message = "ISBN is required")
 	@Column(nullable = false, unique = true)
     @Pattern(regexp = "\\d{12}", message = "ISBN should be a 12-digit number")
 	private String isbn;
 
+	@NotNull(message = "Title is required")
 	@Column(nullable = false,unique = true)
 	private String title;
 
+	@NotNull(message = "Subtitle is required")
 	@Column(nullable = false)
 	private String subTitle;
 
+	@NotNull(message = "Author is required")
 	@Column(nullable = false)
 	private String author;
 
+	@NotNull(message = "Publishdate is required")
 	@Column(nullable = false)
 	@JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate publishDate;
@@ -59,9 +64,11 @@ public class Books {
 	@Min(value = 1, message = "Pages should be greater than 0")
 	private Integer pages;
 	
+	@NotNull(message = "Description is required")
 	@Column(nullable = false)
 	private String description;
 	
+	@NotNull(message = "Website is required")
 	@Column(nullable = false)
 	@URL
 	private String website;
@@ -69,5 +76,8 @@ public class Books {
 	@Transient // Exclude this field from the database table
 	@JsonIgnore
 	private String userId;
+	
+	@Transient
+	private String message;
 
 }

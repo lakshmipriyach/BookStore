@@ -61,6 +61,7 @@ public class BookStoreServiceImpl implements BookStoreService {
 		addbook.setPages(books.getPages());
 		addbook.setDescription(books.getDescription());
 		addbook.setWebsite(books.getWebsite());
+		addbook.setMessage("Book added succesfully.");
 
 		addbook = booksRepository.save(addbook);
 
